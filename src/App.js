@@ -1,24 +1,40 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Topbar from "./components/topbar/Topbar";
+import Sidebar from './components/sidebar/Sidebar';
+import Worksurface from './components/worksurface/Worksurface';
+
+import data from './data/DataProvider';
 
 function App() {
+  const [solutions, setSolutions] = useState(data);
+  const [activeSolution, setActiveSolution] = useState();
+
+  const modifySolution = (id, values) => {
+    const newSolutions = solutions.map( (solution) => {
+      if (solution.id === String(id)) {
+        return {...solution, ...values}
+      }
+      return solution;
+    })
+
+    setSolutions(solutions => newSolutions);
+  }
+
+  // useEffect(
+  //   () => {
+  //     modifySolution(1, {name: 'bar'} );
+  //   }
+  // )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    [
+      <Topbar key="top bar"/>,
+      <div key="app" className="app">
+        <Sidebar solutions={solutions} setActiveSolution={setActiveSolution} />
+        <Worksurface solution={activeSolution} />
+      </div>
+    ]
   );
 }
 

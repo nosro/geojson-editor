@@ -10,6 +10,8 @@ function App() {
   const [solutions, setSolutions] = useState(data);
   const [activeSolution, setActiveSolution] = useState();
 
+  // Catch-all edit for anything in the solution.
+  // In this solution we only modify the edit layer.
   const modifySolution = (id, values) => {
     const newSolutions = solutions.map( (solution) => {
       if (solution.id === String(id)) {
@@ -18,7 +20,7 @@ function App() {
       return solution;
     })
 
-    setSolutions(solutions => newSolutions);
+    setSolutions(solutions => [...newSolutions]);
   }
 
   // useEffect(
@@ -32,7 +34,7 @@ function App() {
       <Topbar key="top bar"/>,
       <div key="app" className="app">
         <Sidebar solutions={solutions} setActiveSolution={setActiveSolution} />
-        <Worksurface solution={activeSolution} />
+        <Worksurface solutions={solutions} activeSolution={activeSolution} modifySolution={modifySolution} />
       </div>
     ]
   );

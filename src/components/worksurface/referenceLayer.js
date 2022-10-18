@@ -4,12 +4,13 @@ const referenceLayer = {
     'source': 'reference',
     'layout': {},
     'paint': {
-      'fill-color': '#627BC1',
+      'fill-color': '#67C',
+      'fill-outline-color': '#000',
       'fill-opacity': [
       'case',
-      ['boolean', ['feature-state', 'active'], false],
+      ['boolean', ['feature-state', 'hover'], false],
         1,
-        0.5
+        0.75
       ]
     }
   };

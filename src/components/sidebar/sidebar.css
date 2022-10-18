@@ -10,10 +10,6 @@
   color: #555;
 }
 
-.sidebarMenu {
-  margin-bottom: 10px;
-}
-
 .sidebarTitle {
   font-size: 13px;
   color: #bbb;
@@ -21,16 +17,23 @@
 
 .sidebarList {
   list-style: none;
-  padding: 5px;
+  padding: .25rem;
 }
 
 .sidebarListItem {
-  padding: 5px;
+  padding: .25rem;
+  margin: .25rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
   border-radius: 10px;
+  text-align: left;
 }
+
+.sidebarListItem a {
+  display: block;
+  width: 100%;
+}
+
+
 
 .sidebarListItem.active,
 .sidebarListItem:hover {

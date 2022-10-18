@@ -5,11 +5,12 @@ const editLayer = {
     'layout': {},
     'paint': {
       'fill-color': '#faa',
+      'fill-outline-color': '#000',
       'fill-opacity': [
       'case',
-      ['boolean', ['feature-state', 'active'], false],
+      ['boolean', ['feature-state', 'hover'], false],
         1,
-        0.5
+        0.8
       ]
     }
   };

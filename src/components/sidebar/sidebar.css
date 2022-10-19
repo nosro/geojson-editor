@@ -28,14 +28,32 @@
   text-align: left;
 }
 
-.sidebarListItem a {
+.sidebarListItem button {
+  all: unset;
+  cursor: pointer;
   display: block;
   width: 100%;
 }
 
-
-
 .sidebarListItem.active,
 .sidebarListItem:hover {
   background-color: #f0f0ff;
+}
+
+.sidebarControl {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: .5rem;
+  min-height: 2rem;
+}
+
+.sidebarControl label {
+  font-size: small;
+  white-space: nowrap;
+}
+
+.sidebarControl select {
+  font-size: small;
+  padding: .25rem;
 }

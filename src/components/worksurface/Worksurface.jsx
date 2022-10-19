@@ -2,16 +2,15 @@ import {useRef} from 'react';
 import Map, {Source, Layer} from 'react-map-gl';
 import editLayer from "./editLayer.js";
 import referenceLayer from "./referenceLayer.js";
+import transferFeature from '../../helper/transferFeature';
+import shapeOperation from '../../helper/shapeOperation';
+
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./worksurface.css";
-import transferFeature from '../../helper/transferFeature';
-import doOperation from '../../helper/doOperation';
 
 export default function Worksurface({solutions, activeSolution, modifySolution, options}) {
   const mapRef = useRef();
-  let hoveredReferenceId = null;
-  let hoveredEditId = null;
 
   if (!activeSolution && activeSolution !== 0) {
     return (
@@ -22,6 +21,7 @@ export default function Worksurface({solutions, activeSolution, modifySolution, 
       </div>
     )
   }
+
   const solution = solutions[activeSolution];
   const {reference, edit} = solution;
 
@@ -42,17 +42,17 @@ export default function Worksurface({solutions, activeSolution, modifySolution, 
 
     if (referenceFeatures.length > 0) {
       // Add to edit layer.
-      ({
-        newOrigin: newReference,
-        newDestination: newEdit,
-      } = transferFeature(referenceFeatures[0].id, reference, edit));
+      ([
+        newReference,
+        newEdit,
+      ] = transferFeature(referenceFeatures[0].id, reference, edit));
 
       if (edit.features.length === 0) {
         modifySolution(solution.id, {reference: newReference, edit: newEdit});
         mapRef.current.getCanvas().style.cursor = 'not-allowed';
       } else {
-        // Do operations if multiple edit features.
-        const feature = doOperation(options.mode, edit.features[0], referenceFeatures[0]);
+        // If multiple edit features, combine shapes according to edit mode.
+        const feature = shapeOperation(options.mode, edit.features[0], referenceFeatures[0]);
         feature.id = edit.features[0].id;
         newEdit.features = [feature];
         modifySolution(solution.id, {reference: newReference, edit: newEdit});
@@ -61,10 +61,9 @@ export default function Worksurface({solutions, activeSolution, modifySolution, 
 
     } else if (editFeatures.length > 0) {
       // Remove from edit layer.
-      ({
-        newOrigin: newEdit,
-        newDestination: newReference,
-      } = transferFeature(editFeatures[0].id, edit, reference));
+      ([newEdit,
+        newReference,
+      ] = transferFeature(editFeatures[0].id, edit, reference));
       modifySolution(solution.id, {reference: newReference, edit: newEdit});
       mapRef.current.getCanvas().style.cursor = 'copy';
     }
@@ -78,33 +77,9 @@ export default function Worksurface({solutions, activeSolution, modifySolution, 
       layers: ['editLayer']
     });
 
-    if (hoveredReferenceId !== null) {
-      mapRef.current.removeFeatureState(
-      { source: 'reference', id: hoveredReferenceId}
-      );
-    }
-
-    if (hoveredEditId !== null) {
-      mapRef.current.removeFeatureState(
-      { source: 'edit', id: hoveredEditId}
-      );
-    }
-
     if (referenceFeatures.length > 0) {
-      console.log('ref features',referenceFeatures[0]);
-      hoveredReferenceId = referenceFeatures[0].id;
-      mapRef.current.setFeatureState(
-        { source: 'reference', id: hoveredReferenceId },
-        { hover: true }
-      );
       mapRef.current.getCanvas().style.cursor = 'copy';
     } else if (editFeatures.length > 0) {
-      console.log('edit features', editFeatures[0]);
-      hoveredEditId = editFeatures[0].id;
-      mapRef.current.setFeatureState(
-        { source: 'edit', id: hoveredEditId },
-        { hover: true }
-      );
       mapRef.current.getCanvas().style.cursor = 'not-allowed';
     } else {
       mapRef.current.getCanvas().style.cursor = 'grab';

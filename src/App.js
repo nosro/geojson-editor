@@ -13,7 +13,7 @@ const defaultOptions = {
 
 function App() {
   const [solutions, setSolutions] = useState(data);
-  const [activeSolution, setActiveSolution] = useState();
+  const [activeSolution, setActiveSolution] = useState( 0 );
   const [options, setOptions] = useState(defaultOptions);
 
   const modifySolution = (id, values) => {

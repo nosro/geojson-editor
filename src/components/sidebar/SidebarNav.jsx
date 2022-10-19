@@ -12,7 +12,7 @@ export default function SidebarNav({solutions, activeSolution, setActiveSolution
                 const className = activeSolution === index ? 'sidebarListItem active' : 'sidebarListItem';
                 return (
                   <li key={`link ${solution.id}`} className={className}>
-                    <a onClick={() => setActiveSolution(index)}>{solution.name}</a>
+                    <button onClick={() => setActiveSolution(index)}>{solution.name}</button>
                   </li>
                 )
               })
